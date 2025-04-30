@@ -75,3 +75,10 @@ const (
 const (
 	VBoxBase = BgDark + " " + TextPrimary + " p-4 space-y-4 flex flex-col"
 )
+
+// Select
+const (
+	SelectBase = BgInput + " " + TextPrimary + " " + BorderInput + " px-3 py-2 " + Rounded + " " + Shadow +
+		" focus:outline-none focus:ring-2 focus:ring-dracula-purple w-full appearance-none bg-dracula-current-line" +
+		" bg-no-repeat bg-right pr-8"
+)
