@@ -82,3 +82,8 @@ const (
 		" focus:outline-none focus:ring-2 focus:ring-dracula-purple w-full appearance-none bg-dracula-current-line" +
 		" bg-no-repeat bg-right pr-8"
 )
+
+// Checkbox
+const (
+	CheckboxBase = "form-checkbox h-5 w-5 text-dracula-purple rounded border-dracula-comment focus:ring-dracula-purple"
+)
