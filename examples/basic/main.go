@@ -1,9 +1,6 @@
 package main
 
 import (
-	"time"
-
-	"github.com/devalexandre/glow/components"
 	"github.com/devalexandre/glow/components/button"
 	"github.com/devalexandre/glow/components/core"
 	"github.com/devalexandre/glow/components/input"
@@ -16,9 +13,10 @@ func main() {
 	txt := text.New("Olá mundo com Glow! ✨")
 	input := input.New("Nome", "DevAlexandre")
 
-	btn := button.NewTargetFunc("Atualizar", txt, func() components.Component {
-		txt.SetContent(input.Value + " - " + time.Now().Format("15:04:05"))
-		return txt
+	btn := button.NewWarning("Atualizar")
+
+	btn.OnClick(func() {
+		txt.SetContentWithValue(input, "15:04:05")
 	})
 
 	page := vbox.New(txt, input, btn)
