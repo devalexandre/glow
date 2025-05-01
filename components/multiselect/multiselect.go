@@ -277,9 +277,23 @@ func (m *MultiSelect) Render() template.HTML {
             z-index: 10;
             cursor: pointer;
             pointer-events: auto; /* Garante que o select receba cliques */
+            background-color: #282a36;
+            color: #f8f8f2;
         }
         #` + m.id + `-container .tag-button {
             z-index: 30;
+        }
+        
+        /* Estilos para as opções do dropdown */
+        select option {
+            background-color: #282a36 !important;
+            color: #f8f8f2 !important;
+            padding: 4px;
+        }
+        
+        /* Estilos para o hover nas opções */
+        select option:hover, select option:focus {
+            background-color: #44475a !important;
         }
     </style>
     `
@@ -306,6 +320,11 @@ func (m *MultiSelect) Render() template.HTML {
                     e.stopPropagation();
                 });
             });
+            
+            // Adicionar estilos globais para corrigir as cores dos dropdowns
+            const style = document.createElement('style');
+            style.textContent = 'select option { background-color: #282a36 !important; color: #f8f8f2 !important; }';
+            document.head.appendChild(style);
         });
     </script>
     `
