@@ -87,3 +87,14 @@ const (
 const (
 	CheckboxBase = "form-checkbox h-5 w-5 text-dracula-purple rounded border-dracula-comment focus:ring-dracula-purple"
 )
+
+// Radio
+const (
+	RadioBase = "form-radio h-5 w-5 text-dracula-purple border-dracula-comment focus:ring-dracula-purple"
+)
+
+// MultiSelect
+const (
+	MultiSelectBase = BgDark + " " + TextPrimary + " " + BorderDark + " px-3 py-2 " + Rounded + " " + Shadow +
+		" focus:outline-none focus:ring-2 focus:ring-dracula-purple w-full min-h-[100px]"
+)
