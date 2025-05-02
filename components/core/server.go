@@ -1,6 +1,7 @@
 package core
 
 import (
+	"mime/multipart"
 	"net/http"
 	"sync"
 
@@ -63,8 +64,68 @@ func HandleAction(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(main))
 }
 
+var (
+	uploadHandlers = make(map[string]func(*multipart.FileHeader))
+	uploadMu       sync.RWMutex
+)
+
+// RegisterUploadHandler registra um manipulador para processar uploads de arquivos
+func RegisterUploadHandler(id string, fn func(*multipart.FileHeader)) {
+	uploadMu.Lock()
+	uploadHandlers[id] = fn
+	uploadMu.Unlock()
+}
+
+// HandleUpload processa o upload de arquivos
+func HandleUpload(w http.ResponseWriter, r *http.Request) {
+	// Verificar se o método é POST
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Obter o ID do manipulador
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		http.Error(w, "ID não fornecido", http.StatusBadRequest)
+		return
+	}
+
+	// Verificar se o manipulador existe
+	uploadMu.RLock()
+	handler, exists := uploadHandlers[id]
+	uploadMu.RUnlock()
+
+	if !exists {
+		http.Error(w, "Manipulador não encontrado", http.StatusNotFound)
+		return
+	}
+
+	// Processar o upload do arquivo (máximo 32MB)
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		http.Error(w, "Erro ao processar o formulário: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Obter o arquivo enviado
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Erro ao obter o arquivo: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Chamar o manipulador
+	handler(header)
+
+	// Redirecionar para a página principal
+	html := renderAllComponents()
+	w.Write([]byte(html))
+}
+
 func Run() {
 	http.HandleFunc("/__glow/action", HandleAction)
+	http.HandleFunc("/__glow/upload", HandleUpload)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		html := renderAllComponents()
 		w.Write([]byte(html))
